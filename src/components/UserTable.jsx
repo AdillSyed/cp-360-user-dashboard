@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { getInitials } from "../utils/getInitials";
 
 export default function UserTable({ users }) {
   const navigate = useNavigate();
@@ -25,8 +26,13 @@ export default function UserTable({ users }) {
               style={{ cursor: "pointer" }}
               title="Click to view details"
             >
-              <td style={{ fontWeight: 700 }}>{u.name}</td>
-              <td>{u.email}</td>
+              <td>
+                <div className="nameCell">
+                  <span className="avatar">{getInitials(u.name)}</span>
+                  <span style={{ fontWeight: 800 }}>{u.name}</span>
+                </div>
+              </td>
+              <td className="emailMuted">{u.email}</td>
               <td>{u.company?.name || "-"}</td>
             </tr>
           ))}
