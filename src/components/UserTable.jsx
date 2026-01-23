@@ -8,40 +8,24 @@ export default function UserTable({ users }) {
   }
 
   return (
-    <div style={{ overflowX: "auto" }}>
-      <table
-        width="100%"
-        cellPadding="12"
-        style={{
-          borderCollapse: "collapse",
-          background: "white",
-          borderRadius: 10,
-          overflow: "hidden",
-        }}
-      >
+    <div className="tableWrap">
+      <table className="table">
         <thead>
-          <tr style={{ background: "#f4f4f4", textAlign: "left" }}>
-            <th style={{ borderBottom: "1px solid #eee" }}>Name</th>
-            <th style={{ borderBottom: "1px solid #eee" }}>Email</th>
-            <th style={{ borderBottom: "1px solid #eee" }}>Company</th>
+          <tr>
+            <th style={{ width: "35%" }}>Name</th>
+            <th style={{ width: "40%" }}>Email</th>
+            <th style={{ width: "25%" }}>Company</th>
           </tr>
         </thead>
-
         <tbody>
           {users.map((u) => (
             <tr
               key={u.id}
-              onClick={() => {
-                if (String(u.id).startsWith("local-")) return;
-                navigate(`/users/${u.id}`);
-              }}
-              style={{
-                cursor: "pointer",
-                borderBottom: "1px solid #eee",
-              }}
-              title={String(u.id).startsWith("local-") ? "Local user (no details page)" : "Click to view details"}
+              onClick={() => navigate(`/users/${u.id}`)}
+              style={{ cursor: "pointer" }}
+              title="Click to view details"
             >
-              <td style={{ fontWeight: 600 }}>{u.name}</td>
+              <td style={{ fontWeight: 700 }}>{u.name}</td>
               <td>{u.email}</td>
               <td>{u.company?.name || "-"}</td>
             </tr>

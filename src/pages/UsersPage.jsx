@@ -12,23 +12,23 @@ export default function UsersPage() {
   const [query, setQuery] = useState("");
   const [isAddOpen, setIsAddOpen] = useState(false);
 
-  const filteredUsers = useMemo(() => {
-    return filterUsers(users, query);
-  }, [users, query]);
+  const filteredUsers = useMemo(() => filterUsers(users, query), [users, query]);
 
   if (loading) return <Loader text="Loading users..." />;
 
   if (error) {
     return (
-      <div style={{ padding: 20 }}>
-        <h1>User Management Dashboard</h1>
-        <p style={{ color: "red" }}>{error}</p>
+      <div className="container">
+        <div className="card">
+          <h1 className="pageTitle">User Management Dashboard</h1>
+          <p style={{ color: "red", marginBottom: 0 }}>{error}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: 1000, margin: "0 auto", padding: 20 }}>
+    <div className="container">
       <div
         style={{
           display: "flex",
@@ -39,38 +39,37 @@ export default function UsersPage() {
         }}
       >
         <div>
-          <h1 style={{ marginBottom: 6 }}>User Management Dashboard</h1>
-          <p style={{ marginTop: 0, color: "#666" }}>
+          <h1 className="pageTitle">User Management Dashboard</h1>
+          <p className="subtitle">
             Search users and click a row to view details
           </p>
         </div>
-        <button
-          onClick={() => setIsAddOpen(true)}
-          style={{
-            alignSelf: "center",
-            padding: "10px 14px",
-            borderRadius: 10,
-            border: "none",
-            background: "black",
-            color: "white",
-            fontWeight: 600,
-            cursor: "pointer",
-            height: 42,
-          }}
-        >
+        <button className="btnPrimary" onClick={() => setIsAddOpen(true)}>
           + Add User
         </button>
       </div>
-      <div style={{ marginTop: 16 }}>
-        <SearchBar value={query} onChange={setQuery} />
+      <div style={{ height: 16 }} />
+      <div className="card">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            flexWrap: "wrap",
+            marginBottom: 14,
+          }}
+        >
+          <div style={{ flex: 1, minWidth: 240 }}>
+            <SearchBar value={query} onChange={setQuery} />
+          </div>
+          <span className="badge">Showing: {filteredUsers.length}</span>
+        </div>
         <UserTable users={filteredUsers} />
       </div>
       {isAddOpen && (
         <Modal title="Add User" onClose={() => setIsAddOpen(false)}>
-          <AddUserForm
-            onAddUser={addUser}
-            onClose={() => setIsAddOpen(false)}
-          />
+          <AddUserForm onAddUser={addUser} onClose={() => setIsAddOpen(false)} />
         </Modal>
       )}
     </div>
