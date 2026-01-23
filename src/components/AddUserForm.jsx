@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function AddUserForm({ onAddUser }) {
+export default function AddUserForm({ onAddUser, onClose }) {
   const [form, setForm] = useState({name: "", email: "", company: ""});
   const [errors, setErrors] = useState({});
 
@@ -24,20 +24,12 @@ export default function AddUserForm({ onAddUser }) {
     });
     setForm({ name: "", email: "", company: "" });
     setErrors({});
+
+    if (onClose) onClose();
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        background: "white",
-        padding: 16,
-        borderRadius: 10,
-        border: "1px solid #eee",
-        marginBottom: 16,
-      }}
-    >
-      <h3 style={{ marginTop: 0, marginBottom: 12 }}>Add User (Local)</h3>
+    <form onSubmit={handleSubmit}>
       <div style={{ display: "grid", gap: 12 }}>
         <div>
           <input
@@ -48,7 +40,7 @@ export default function AddUserForm({ onAddUser }) {
               padding: 12,
               borderRadius: 8,
               border: "1px solid #ccc",
-              width: "100%",
+              width: "95%",
             }}
           />
           {errors.name && (
@@ -66,7 +58,7 @@ export default function AddUserForm({ onAddUser }) {
               padding: 12,
               borderRadius: 8,
               border: "1px solid #ccc",
-              width: "100%",
+              width: "95%",
             }}
           />
           {errors.email && (
@@ -86,7 +78,7 @@ export default function AddUserForm({ onAddUser }) {
               padding: 12,
               borderRadius: 8,
               border: "1px solid #ccc",
-              width: "100%",
+              width: "95%",
             }}
           />
           {errors.company && (
@@ -105,6 +97,7 @@ export default function AddUserForm({ onAddUser }) {
             color: "white",
             fontWeight: 600,
             cursor: "pointer",
+            width: "100%",
           }}
         >
           + Add User
