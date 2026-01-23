@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchUsers } from "../api/usersApi";
 import Loader from "../components/Loader";
 import UserTable from "../components/UserTable";
+import SearchBar from "../components/SearchBar";
+import { filterUsers } from "../utils/filterUsers";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -29,6 +32,10 @@ export default function UsersPage() {
     return () => controller.abort();
   }, []);
 
+  const filteredUsers = useMemo(() => {
+    return filterUsers(users, query);
+  }, [users, query]);
+
   if (loading) return <Loader text="Loading users..." />;
 
   if (error) {
@@ -44,10 +51,12 @@ export default function UsersPage() {
     <div style={{ maxWidth: 1000, margin: "0 auto", padding: 20 }}>
       <h1 style={{ marginBottom: 6 }}>User Management Dashboard</h1>
       <p style={{ marginTop: 0, color: "#666" }}>
-        Click a user row to view details
+        Search users and click a row to view details
       </p>
 
-      <UserTable users={users} />
+      <SearchBar value={query} onChange={setQuery} />
+
+      <UserTable users={filteredUsers} />
     </div>
   );
 }

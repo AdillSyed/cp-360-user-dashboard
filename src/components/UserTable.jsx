@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 export default function UserTable({ users }) {
   const navigate = useNavigate();
 
+  if (!users.length) {
+    return <p style={{ margin: 0 }}>No users found.</p>;
+  }
+
   return (
     <div style={{ overflowX: "auto" }}>
       <table
