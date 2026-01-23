@@ -31,12 +31,15 @@ export default function UserTable({ users }) {
           {users.map((u) => (
             <tr
               key={u.id}
-              onClick={() => navigate(`/users/${u.id}`)}
+              onClick={() => {
+                if (String(u.id).startsWith("local-")) return;
+                navigate(`/users/${u.id}`);
+              }}
               style={{
                 cursor: "pointer",
                 borderBottom: "1px solid #eee",
               }}
-              title="Click to view details"
+              title={String(u.id).startsWith("local-") ? "Local user (no details page)" : "Click to view details"}
             >
               <td style={{ fontWeight: 600 }}>{u.name}</td>
               <td>{u.email}</td>

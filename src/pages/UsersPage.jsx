@@ -4,9 +4,11 @@ import Loader from "../components/Loader";
 import UserTable from "../components/UserTable";
 import SearchBar from "../components/SearchBar";
 import { filterUsers } from "../utils/filterUsers";
+import AddUserForm from "../components/AddUserForm";
 
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+  const [apiUsers, setApiUsers] = useState([]);
+  const [localUsers, setLocalUsers] = useState([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,7 +21,7 @@ export default function UsersPage() {
         setLoading(true);
         setError("");
         const data = await fetchUsers(controller.signal);
-        setUsers(data);
+        setApiUsers(data);
       } catch (e) {
         if (e.name !== "AbortError") setError("Failed to fetch users");
       } finally {
@@ -32,9 +34,11 @@ export default function UsersPage() {
     return () => controller.abort();
   }, []);
 
-  const filteredUsers = useMemo(() => {
-    return filterUsers(users, query);
-  }, [users, query]);
+  const users = useMemo(() => {
+    return [...localUsers, ...apiUsers];
+  }, [localUsers, apiUsers]);
+
+  const filteredUsers = useMemo(() => filterUsers(users, query), [users, query]);
 
   if (loading) return <Loader text="Loading users..." />;
 
@@ -47,15 +51,26 @@ export default function UsersPage() {
     );
   }
 
+  function handleAddUser(newUser) {
+    setLocalUsers((prev) => [
+      {
+        id: `local-${Date.now()}`,
+        name: newUser.name,
+        email: newUser.email,
+        company: { name: newUser.company },
+      },
+      ...prev,
+    ]);
+  }
+
   return (
     <div style={{ maxWidth: 1000, margin: "0 auto", padding: 20 }}>
       <h1 style={{ marginBottom: 6 }}>User Management Dashboard</h1>
       <p style={{ marginTop: 0, color: "#666" }}>
         Search users and click a row to view details
       </p>
-
+      <AddUserForm onAddUser={handleAddUser} />
       <SearchBar value={query} onChange={setQuery} />
-
       <UserTable users={filteredUsers} />
     </div>
   );
